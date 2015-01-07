@@ -10,12 +10,8 @@ jar {
 }
 
 dependencies {
-    compile 'net.imagej:ij:1.+'
-    compile 'net.imglib2:imglib2:2.+'
-    compile 'net.imglib2:imglib2-ops:2.+'
-    compile 'net.imglib2:imglib2-realtransform:2.+'
-    compile 'net.imglib2:imglib2-meta:2.+'
-    compile 'net.imglib2:imglib2-ij:2.+'
+    compile 'net.imagej:imagej-common:+'
+    compile 'net.imagej:imagej-legacy:+'
     testCompile 'junit:junit:4.+'
 }
 
