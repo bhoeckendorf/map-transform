@@ -1,0 +1,48 @@
+apply plugin: 'java'
+
+group = 'de.uni_heidelberg.cos.agw'
+archivesBaseName = 'map-transform'
+sourceCompatibility = 1.6
+
+jar {
+    from 'readme.md'
+    from 'license.txt'
+}
+
+dependencies {
+    compile 'net.imagej:ij:1.+'
+    compile 'net.imglib2:imglib2:2.+'
+    compile 'net.imglib2:imglib2-ops:2.+'
+    compile 'net.imglib2:imglib2-realtransform:2.+'
+    compile 'net.imglib2:imglib2-meta:2.+'
+    compile 'net.imglib2:imglib2-ij:2.+'
+    testCompile 'junit:junit:4.+'
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven { // ImageJ Releases
+        url 'http://maven.imagej.net/content/repositories/releases'
+    }
+//        maven { // ImageJ Snapshots
+//            url 'http://maven.imagej.net/content/repositories/snapshots'
+//        }
+//        maven { // ImageJ 3rdparty
+//            url 'http://maven.imagej.net/content/repositories/thirdparty'
+//        }
+//        maven { // ImageJ Public
+//            url 'http://maven.imagej.net/content/repositories/public'
+//        }
+}
+
+task deployToImageJ(type: Copy, dependsOn: build) {
+    def dst = System.getenv('HOME')
+    if (dst == null)
+        dst = System.getenv('USERPROFILE')
+    dst += '/Programs/ImageJ/plugins/'
+    from jar into dst
+    doLast {
+        println('Deployed to ' + dst)
+    }
+}
