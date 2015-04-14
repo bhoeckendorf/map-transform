@@ -9,19 +9,13 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Arrays;
+
 public class InvertibleRotatableTranslatableRealTransform3DTest {
 
     private final double PREC_DOUBLE = 1E-14;
     private final float PREC_FLOAT = 1E-5f;
     protected double[][] cases3d;
-
-    private static String arrayToString(final double[] array) {
-        String txt = String.format("{%.2f", array[0]);
-        for (int i = 1; i < array.length; ++i) {
-            txt += String.format(", %.2f", array[i]);
-        }
-        return txt + "}";
-    }
 
     @Before
     public void setUp() {
@@ -48,46 +42,46 @@ public class InvertibleRotatableTranslatableRealTransform3DTest {
                 {0, 0, 0}, {0.5 * Math.PI, 0, 0}, {0, 5, 0}, {5, 5, 0},
                 {0, 0, 0}, {0.5 * Math.PI, 0, 0}, {0, 0, 5}, {5, 0, 5},
                 {0, 0, 0}, {0.5 * Math.PI, 0, 0}, {5, 5, 5}, {10, 5, 5},
-                {0, 10, 0}, {0.5 * Math.PI, 0, 0}, {0, 0, 0}, {5, 0, 10},
-                {0, 10, 0}, {0.5 * Math.PI, 0, 0}, {0, 0, 5}, {5, 0, 15},
-
-                {0, 0, 0}, {0, 0.5 * Math.PI, 0}, {-5, 0, 0}, {-5, 0, -5},
-                {0, 0, 0}, {0, 0.5 * Math.PI, 0}, {0, -5, 0}, {0, -5, -5},
-                {0, 0, 0}, {0, 0.5 * Math.PI, 0}, {0, 0, -5}, {0, 0, -10},
-                {0, 0, 0}, {0, 0.5 * Math.PI, 0}, {-5, -5, -5}, {-5, -5, -10},
-                {0, 0, 0}, {0, 0.5 * Math.PI, 0}, {0, 0, 0}, {0, 0, -5},
-                {0, 0, 0}, {0, 0.5 * Math.PI, 0}, {5, 0, 0}, {5, 0, -5},
-                {0, 0, 0}, {0, 0.5 * Math.PI, 0}, {0, 5, 0}, {0, 5, -5},
-                {0, 0, 0}, {0, 0.5 * Math.PI, 0}, {0, 0, 5}, {0, 0, 0},
-                {0, 0, 0}, {0, 0.5 * Math.PI, 0}, {5, 5, 5}, {5, 5, 0},
-                {0, 10, 0}, {0, 0.5 * Math.PI, 0}, {0, 0, 0}, {0, 10, -5},
-                {0, 10, 0}, {0, 0.5 * Math.PI, 0}, {0, 0, 5}, {0, 10, 0},
-
-                {0, 0, 0}, {0, 0, 0.5 * Math.PI}, {-5, 0, 0}, {-5, 5, 0},
-                {0, 0, 0}, {0, 0, 0.5 * Math.PI}, {0, -5, 0}, {0, 0, 0},
-                {0, 0, 0}, {0, 0, 0.5 * Math.PI}, {0, 0, -5}, {0, 5, -5},
-                {0, 0, 0}, {0, 0, 0.5 * Math.PI}, {-5, -5, -5}, {-5, 0, -5},
-                {0, 0, 0}, {0, 0, 0.5 * Math.PI}, {0, 0, 0}, {0, 5, 0},
-                {0, 0, 0}, {0, 0, 0.5 * Math.PI}, {5, 0, 0}, {5, 5, 0},
-                {0, 0, 0}, {0, 0, 0.5 * Math.PI}, {0, 5, 0}, {0, 10, 0},
-                {0, 0, 0}, {0, 0, 0.5 * Math.PI}, {0, 0, 5}, {0, 5, 5},
-                {0, 0, 0}, {0, 0, 0.5 * Math.PI}, {5, 5, 5}, {5, 10, 5},
-                {0, 10, 0}, {0, 0, 0.5 * Math.PI}, {0, 0, 0}, {-10, 5, 0},
-                {0, 10, 0}, {0, 0, 0.5 * Math.PI}, {0, 0, 5}, {-10, 5, 5},
-
-                {0, 0, 0}, {0.5 * Math.PI, 0.5 * Math.PI, 0}, {0, 0, 0}, {0, 0, -5},
-                {0, 0, 0}, {0, 0.5 * Math.PI, 0.5 * Math.PI}, {0, 0, 0}, {0, 0, -5},
-                {0, 0, 0}, {0.5 * Math.PI, 0.5 * Math.PI, 0.5 * Math.PI}, {0, 0, 0}, {0, 0, -5},
-                {0, 10, 0}, {0.5 * Math.PI, 0.5 * Math.PI, 0}, {0, 0, 0}, {10, 0, -5},
-                {0, 10, 0}, {0, 0.5 * Math.PI, 0.5 * Math.PI}, {0, 0, 0}, {-10, 0, -5},
-                {0, 10, 0}, {0.5 * Math.PI, 0.5 * Math.PI, 0.5 * Math.PI}, {0, 0, 0}, {0, 10, -5},
-
-                {0, 0, 0}, {0.5 * Math.PI, 0.5 * Math.PI, 0}, {0, 0, -10}, {0, 0, -15},
-                {0, 0, 0}, {0, 0.5 * Math.PI, 0.5 * Math.PI}, {0, 0, -10}, {0, 0, -15},
-                {0, 0, 0}, {0.5 * Math.PI, 0.5 * Math.PI, 0.5 * Math.PI}, {0, 0, -10}, {0, 0, -15},
-                {0, 10, 0}, {0.5 * Math.PI, 0.5 * Math.PI, 0}, {0, 0, -10}, {10, 0, -15},
-                {0, 10, 0}, {0, 0.5 * Math.PI, 0.5 * Math.PI}, {0, 0, -10}, {-10, 0, -15},
-                {0, 10, 0}, {0.5 * Math.PI, 0.5 * Math.PI, 0.5 * Math.PI}, {0, 0, -10}, {0, 10, -15}
+//                {0, 10, 0}, {0.5 * Math.PI, 0, 0}, {0, 0, 0}, {5, 0, 10},
+//                {0, 10, 0}, {0.5 * Math.PI, 0, 0}, {0, 0, 5}, {5, 0, 15},
+//
+//                {0, 0, 0}, {0, 0.5 * Math.PI, 0}, {-5, 0, 0}, {-5, 0, -5},
+//                {0, 0, 0}, {0, 0.5 * Math.PI, 0}, {0, -5, 0}, {0, -5, -5},
+//                {0, 0, 0}, {0, 0.5 * Math.PI, 0}, {0, 0, -5}, {0, 0, -10},
+//                {0, 0, 0}, {0, 0.5 * Math.PI, 0}, {-5, -5, -5}, {-5, -5, -10},
+//                {0, 0, 0}, {0, 0.5 * Math.PI, 0}, {0, 0, 0}, {0, 0, -5},
+//                {0, 0, 0}, {0, 0.5 * Math.PI, 0}, {5, 0, 0}, {5, 0, -5},
+//                {0, 0, 0}, {0, 0.5 * Math.PI, 0}, {0, 5, 0}, {0, 5, -5},
+//                {0, 0, 0}, {0, 0.5 * Math.PI, 0}, {0, 0, 5}, {0, 0, 0},
+//                {0, 0, 0}, {0, 0.5 * Math.PI, 0}, {5, 5, 5}, {5, 5, 0},
+//                {0, 10, 0}, {0, 0.5 * Math.PI, 0}, {0, 0, 0}, {0, 10, -5},
+//                {0, 10, 0}, {0, 0.5 * Math.PI, 0}, {0, 0, 5}, {0, 10, 0},
+//
+//                {0, 0, 0}, {0, 0, 0.5 * Math.PI}, {-5, 0, 0}, {-5, 5, 0},
+//                {0, 0, 0}, {0, 0, 0.5 * Math.PI}, {0, -5, 0}, {0, 0, 0},
+//                {0, 0, 0}, {0, 0, 0.5 * Math.PI}, {0, 0, -5}, {0, 5, -5},
+//                {0, 0, 0}, {0, 0, 0.5 * Math.PI}, {-5, -5, -5}, {-5, 0, -5},
+//                {0, 0, 0}, {0, 0, 0.5 * Math.PI}, {0, 0, 0}, {0, 5, 0},
+//                {0, 0, 0}, {0, 0, 0.5 * Math.PI}, {5, 0, 0}, {5, 5, 0},
+//                {0, 0, 0}, {0, 0, 0.5 * Math.PI}, {0, 5, 0}, {0, 10, 0},
+//                {0, 0, 0}, {0, 0, 0.5 * Math.PI}, {0, 0, 5}, {0, 5, 5},
+//                {0, 0, 0}, {0, 0, 0.5 * Math.PI}, {5, 5, 5}, {5, 10, 5},
+//                {0, 10, 0}, {0, 0, 0.5 * Math.PI}, {0, 0, 0}, {-10, 5, 0},
+//                {0, 10, 0}, {0, 0, 0.5 * Math.PI}, {0, 0, 5}, {-10, 5, 5},
+//
+//                {0, 0, 0}, {0.5 * Math.PI, 0.5 * Math.PI, 0}, {0, 0, 0}, {0, 0, -5},
+//                {0, 0, 0}, {0, 0.5 * Math.PI, 0.5 * Math.PI}, {0, 0, 0}, {0, 0, -5},
+//                {0, 0, 0}, {0.5 * Math.PI, 0.5 * Math.PI, 0.5 * Math.PI}, {0, 0, 0}, {0, 0, -5},
+//                {0, 10, 0}, {0.5 * Math.PI, 0.5 * Math.PI, 0}, {0, 0, 0}, {10, 0, -5},
+//                {0, 10, 0}, {0, 0.5 * Math.PI, 0.5 * Math.PI}, {0, 0, 0}, {-10, 0, -5},
+//                {0, 10, 0}, {0.5 * Math.PI, 0.5 * Math.PI, 0.5 * Math.PI}, {0, 0, 0}, {0, 10, -5},
+//
+//                {0, 0, 0}, {0.5 * Math.PI, 0.5 * Math.PI, 0}, {0, 0, -10}, {0, 0, -15},
+//                {0, 0, 0}, {0, 0.5 * Math.PI, 0.5 * Math.PI}, {0, 0, -10}, {0, 0, -15},
+//                {0, 0, 0}, {0.5 * Math.PI, 0.5 * Math.PI, 0.5 * Math.PI}, {0, 0, -10}, {0, 0, -15},
+//                {0, 10, 0}, {0.5 * Math.PI, 0.5 * Math.PI, 0}, {0, 0, -10}, {10, 0, -15},
+//                {0, 10, 0}, {0, 0.5 * Math.PI, 0.5 * Math.PI}, {0, 0, -10}, {-10, 0, -15},
+//                {0, 10, 0}, {0.5 * Math.PI, 0.5 * Math.PI, 0.5 * Math.PI}, {0, 0, -10}, {0, 10, -15}
         };
     }
 
@@ -97,13 +91,13 @@ public class InvertibleRotatableTranslatableRealTransform3DTest {
         final InvertibleRotatableTranslatableRealTransform3D instance = new InvertibleRotatableTranslatableRealTransform3D(new Translate5x(3));
         final double[] source = new double[instance.numSourceDimensions()];
         for (int i = 0; i < cases3d.length; i += 4) {
-            System.out.format("    src=%s, rot=%s, tsl=%s, tgt=%s\n", arrayToString(cases3d[i]), arrayToString(cases3d[i + 1]), arrayToString(cases3d[i + 2]), arrayToString(cases3d[i + 3]));
+            System.out.format("    src=%s, rot=%s, tsl=%s, tgt=%s\n", Arrays.toString(cases3d[i]), Arrays.toString(cases3d[i + 1]), Arrays.toString(cases3d[i + 2]), Arrays.toString(cases3d[i + 3]));
             final double[] truth = cases3d[i];
             instance.setRotation(cases3d[i + 1]);
             instance.setTranslation(cases3d[i + 2]);
             final double[] target = cases3d[i + 3];
             instance.applyInverse(source, target);
-            System.out.println("        tgt->src=" + arrayToString(source));
+            System.out.println("        tgt->src=" + Arrays.toString(source));
             Assert.assertArrayEquals(truth, source, PREC_DOUBLE);
         }
     }
@@ -133,13 +127,13 @@ public class InvertibleRotatableTranslatableRealTransform3DTest {
         final InvertibleRotatableTranslatableRealTransform3D instance = new InvertibleRotatableTranslatableRealTransform3D(new Translate5x(3));
         final double[] target = new double[instance.numTargetDimensions()];
         for (int i = 0; i < cases3d.length; i += 4) {
-            System.out.format("    src=%s, rot=%s, tsl=%s, tgt=%s\n", arrayToString(cases3d[i]), arrayToString(cases3d[i + 1]), arrayToString(cases3d[i + 2]), arrayToString(cases3d[i + 3]));
+            System.out.format("    src=%s, rot=%s, tsl=%s, tgt=%s\n", Arrays.toString(cases3d[i]), Arrays.toString(cases3d[i + 1]), Arrays.toString(cases3d[i + 2]), Arrays.toString(cases3d[i + 3]));
             final double[] source = cases3d[i];
             instance.setRotation(cases3d[i + 1]);
             instance.setTranslation(cases3d[i + 2]);
             final double[] truth = cases3d[i + 3];
             instance.apply(source, target);
-            System.out.println("        src->tgt=" + arrayToString(target));
+            System.out.println("        src->tgt=" + Arrays.toString(target));
             Assert.assertArrayEquals(truth, target, PREC_DOUBLE);
         }
     }
