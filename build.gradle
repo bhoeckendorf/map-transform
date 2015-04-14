@@ -21,15 +21,15 @@ repositories {
     maven { // ImageJ Releases
         url 'http://maven.imagej.net/content/repositories/releases'
     }
-//        maven { // ImageJ Snapshots
-//            url 'http://maven.imagej.net/content/repositories/snapshots'
-//        }
-//        maven { // ImageJ 3rdparty
-//            url 'http://maven.imagej.net/content/repositories/thirdparty'
-//        }
-//        maven { // ImageJ Public
-//            url 'http://maven.imagej.net/content/repositories/public'
-//        }
+    maven { // ImageJ 3rdparty
+        url 'http://maven.imagej.net/content/repositories/thirdparty'
+    }
+    maven { // ImageJ Public
+        url 'http://maven.imagej.net/content/repositories/public'
+    }
+//    maven { // ImageJ Snapshots
+//        url 'http://maven.imagej.net/content/repositories/snapshots'
+//    }
 }
 
 task deployToImageJ(type: Copy, dependsOn: build) {
