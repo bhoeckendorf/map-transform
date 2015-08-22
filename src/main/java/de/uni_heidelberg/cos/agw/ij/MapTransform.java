@@ -4,7 +4,6 @@ import de.uni_heidelberg.cos.agw.ij.transform.AzimuthalEquidistantToCartesianTra
 import de.uni_heidelberg.cos.agw.ij.transform.CylindricalToCartesianIntervalTransform;
 import de.uni_heidelberg.cos.agw.ij.transform.EquirectangularToCartesianTransform;
 import de.uni_heidelberg.cos.agw.ij.transform.RotatableTranslatableRealTransform3D;
-import ij.IJ;
 import net.imagej.Dataset;
 import net.imagej.DefaultDataset;
 import net.imagej.ImgPlus;
@@ -40,9 +39,12 @@ public class MapTransform<T extends RealType<T> & NativeType<T>, V extends RealT
     private double rotationX = 0, rotationY = 0, rotationSelf = 0;
 
     @Parameter
-    private double innerRadius = 200, outerRadius = 425, stdRadiusOffset = 0.7;
+    private double innerRadius = 200, outerRadius = 425;
 
-    @Parameter
+    @Parameter(min = "0.0", max = "1.0")
+    private double stdRadiusOffset = 0.7;
+
+    @Parameter(min = "0.1", max = "1.0")
     private double scale = 1;
 
     @Parameter
@@ -64,15 +66,6 @@ public class MapTransform<T extends RealType<T> & NativeType<T>, V extends RealT
     public void run() {
         cylinderHeight = in.dimension(0);
 
-        if (stdRadiusOffset <= 0 || stdRadiusOffset > 1) {
-            IJ.error("Map Transform", "Standard radius offset must be between 0 and 1.");
-            return;
-        }
-        if (scale <= 0) {
-            IJ.error("Map Transform", "Scale must be greater than 0.");
-            return;
-        }
-
         final double[] translation = {centerX, centerY, centerZ};
         final double[] rotation = {rotationX, rotationY, rotationSelf};
 
@@ -84,8 +77,7 @@ public class MapTransform<T extends RealType<T> & NativeType<T>, V extends RealT
         else
             interpol = new NLinearInterpolatorFactory<T>();
 
-        final Img<T> inImg = (Img<T>) in.getImgPlus();
-        final RealRandomAccess<T> inputRa = Views.interpolate(Views.extendZero(inImg), interpol).realRandomAccess();
+        final RealRandomAccess inRRa = Views.interpolate(Views.extendZero((Img<T>) in.getImgPlus()), interpol).realRandomAccess();
 
         V transform = null;
         if (transformation.equals("Azimuthal Equidistant"))
@@ -95,7 +87,7 @@ public class MapTransform<T extends RealType<T> & NativeType<T>, V extends RealT
         else
             transform = (V) (new EquirectangularToCartesianTransform(innerRadius, outerRadius, stdRadiusOffset, scale));
 
-        final Transformation transformation = new Transformation(transform, translation, rotation, inputRa);
+        final Transformation transformation = new Transformation(transform, translation, rotation, inRRa);
         final String filenameParams = String.format(
                 "-%s-cx%.2f-cy%.2f-cz%.2f-rx%.2f-ry%.2f-rs%.2f-ri%.2f-ro%.2f-sr%.2f-sc%.2f",
                 this.transformation, centerX, centerY, centerZ,
@@ -103,8 +95,9 @@ public class MapTransform<T extends RealType<T> & NativeType<T>, V extends RealT
                 innerRadius, outerRadius, stdRadiusOffset, scale);
         final String fileName = addToFilename(in.getName(), filenameParams);
 
-        final Img<T> outputImg = transformation.compute(in.getImgPlus().factory(), in.firstElement());
-        out = new DefaultDataset(in.context(), new ImgPlus(outputImg));
+        final Img<T> outImg = transformation.compute(in.getImgPlus().factory(), in.firstElement());
+        out = new DefaultDataset(in.context(), new ImgPlus(outImg));
+        out.setName(fileName);
     }
 
     private String addToFilename(final String filename, final String addition) {
@@ -139,7 +132,7 @@ class Transformation<T extends NumericType<T> & RealType<T> & NativeType<T>, V e
         final Img<T> outputImg = factory.create(outputDimensions, element);
         final Cursor<T> outputCur = outputImg.localizingCursor();
         while (outputCur.hasNext()) {
-            outputCur.next();
+            outputCur.fwd();
             transform.apply(outputCur, inputRa);
             outputCur.get().set(inputRa.get());
         }
