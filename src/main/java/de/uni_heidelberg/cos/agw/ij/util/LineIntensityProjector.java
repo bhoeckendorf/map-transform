@@ -2,6 +2,7 @@ package de.uni_heidelberg.cos.agw.ij.util;
 
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.RealRandomAccess;
+import net.imglib2.RealRandomAccessible;
 import net.imglib2.interpolation.InterpolatorFactory;
 import net.imglib2.ops.operation.BinaryOperation;
 import net.imglib2.type.numeric.NumericType;
@@ -13,9 +14,13 @@ public class LineIntensityProjector<T extends NumericType<T>> {
     private final RealRandomAccess<T> ra;
 
     @SuppressWarnings("unchecked")
-    public LineIntensityProjector(RandomAccessibleInterval<T> img, InterpolatorFactory interpolation) {
+    public LineIntensityProjector(final RandomAccessibleInterval<T> img, final InterpolatorFactory interpolation) {
+        this(Views.interpolate(Views.extendZero(img), interpolation));
+    }
+
+    public LineIntensityProjector(final RealRandomAccessible<T> img) {
         iterator = new MutableLinearIterator(img.numDimensions());
-        ra = Views.interpolate(Views.extendZero(img), interpolation).realRandomAccess();
+        ra = img.realRandomAccess();
     }
 
     public void set(final double[] start, final double[] end) {
