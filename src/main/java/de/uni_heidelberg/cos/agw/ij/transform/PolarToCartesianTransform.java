@@ -8,7 +8,16 @@ import net.imglib2.realtransform.InvertibleRealTransform;
 public class PolarToCartesianTransform implements InvertibleRealTransform {
 
     private final double[] temp = new double[2];
+    private double azimuthOffset = 0;
     private InverseRealTransform inverse;
+
+    public void setAzimuthOffset(final double rad) {
+        azimuthOffset = rad;
+    }
+
+    public double getAzimuthOffset() {
+        return azimuthOffset;
+    }
 
     @Override
     public void apply(final double[] source, final double[] target) {
@@ -55,8 +64,8 @@ public class PolarToCartesianTransform implements InvertibleRealTransform {
     }
 
     private void polarToCartesian(final double radius, final double azimuth, final double[] target) {
-        target[0] = radius * Math.cos(azimuth);
-        target[1] = radius * Math.sin(azimuth);
+        target[0] = radius * Math.cos(azimuth + azimuthOffset);
+        target[1] = radius * Math.sin(azimuth + azimuthOffset);
     }
 
     private void cartesianToPolar(final double x, final double y, final double[] target) {
@@ -68,6 +77,7 @@ public class PolarToCartesianTransform implements InvertibleRealTransform {
         } else { // if (x < 0)
             target[1] = -Math.asin(y / target[0]) + Math.PI;
         }
+        target[1] -= azimuthOffset;
         if (target[1] < 0) {
             target[1] += 2d * Math.PI;
         }
