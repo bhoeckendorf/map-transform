@@ -6,7 +6,7 @@ import net.imglib2.realtransform.*;
 
 public class InvertibleRotatableTranslatableRealTransform2D implements InvertibleRealTransform {
 
-    private final InvertibleRealTransform transform;
+    protected final InvertibleRealTransform transform;
     private final AffineTransform2D rotation;
     private final Translation2D translation;
     private final InvertibleRealTransformSequence transformSequence;
